@@ -1,0 +1,11 @@
+body {
+    font: 14px sans-serif;
+}
+.wrapper {
+    width: 350px;
+    padding: 20px;
+    margin: 0 auto;
+}
+.help-block, .message {
+    color: red;
+}
