@@ -3,7 +3,7 @@ A basic user registration and login system built with PHP, HTML, jQuery, AJAX, J
 
 **Topics:** `php`, `mysql`, `ajax`, `json`, `bootstrap`, `jquery`, `css`, `user authentication`, `user registration`, `user-login`, `session management`
 
-![simple-currency-converter](./assets/images/simple-user-authentication-system.png)
+![simple-user-authentication-system](./assets/images/simple-user-authentication-system.png)
 
 ### Install Process
 
