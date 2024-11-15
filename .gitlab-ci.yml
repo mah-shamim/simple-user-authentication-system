@@ -41,6 +41,7 @@ run_tests:
   stage: test
   script:
     - echo "Running tests..."
+    - docker logs $(docker ps -q --filter "name=mysql")
     - php vendor/bin/phpunit --configuration phpunit.xml.dist
   only:
     - main
