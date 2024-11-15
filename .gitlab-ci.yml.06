@@ -1,0 +1,36 @@
+stages:
+  - install
+  - test
+  - deploy
+
+variables:
+  DB_HOST: "localhost"
+  DB_NAME: "user_auth_db"
+  DB_USER: "root"
+  DB_PASSWORD: "root"
+
+# Job to install dependencies
+install_dependencies:
+  stage: install
+  image: php:5.6-apache
+  script:
+    - apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev
+    - docker-php-ext-install gd mysqli pdo pdo_mysql
+    - cp .env.example .env
+    - composer install
+
+# Job to run PHP unit tests (Optional)
+run_tests:
+  stage: test
+  image: php:5.6
+  script:
+    - composer install
+    - ./vendor/bin/phpunit --configuration phpunit.xml.dist
+
+# Job to deploy to server (example for Heroku or any server)
+#deploy:
+#  stage: deploy
+#  script:
+#    - echo "Deploying to production..."
+    # Add your deployment steps here
+#    - ssh user@your-server 'cd /path/to/app && git pull origin main && composer install'

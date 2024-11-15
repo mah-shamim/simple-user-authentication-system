@@ -4,33 +4,41 @@ stages:
   - deploy
 
 variables:
-  DB_HOST: "localhost"
-  DB_NAME: "user_auth_db"
-  DB_USER: "root"
-  DB_PASSWORD: "root"
+  PHP_VERSION: "5.6"
 
-# Job to install dependencies
+# Install PHP dependencies using composer
 install_dependencies:
-  stage: install
-  image: php:5.6-apache
-  script:
-    - apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev
-    - docker-php-ext-install gd mysqli pdo pdo_mysql
-    - cp .env.example .env
-    - composer install
-
-# Job to run PHP unit tests (Optional)
-run_tests:
-  stage: test
   image: php:5.6
+  stage: install
+  before_script:
+    - apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git
+    - docker-php-ext-configure gd --with-freetype-dir=/usr/include --with-jpeg-dir=/usr/include
+    - docker-php-ext-install gd
+    - curl -sS https://getcomposer.org/installer | php
+    - mv composer.phar /usr/local/bin/composer
   script:
     - composer install
-    - ./vendor/bin/phpunit --configuration phpunit.xml.dist
+  cache:
+    paths:
+      - vendor/
 
-# Job to deploy to server (example for Heroku or any server)
-#deploy:
-#  stage: deploy
-#  script:
-#    - echo "Deploying to production..."
-    # Add your deployment steps here
-#    - ssh user@your-server 'cd /path/to/app && git pull origin main && composer install'
+# Run tests
+run_tests:
+  image: php:5.6
+  stage: test
+  before_script:
+    - apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git
+    - curl -sS https://getcomposer.org/installer | php
+    - mv composer.phar /usr/local/bin/composer
+    - composer install
+  script:
+    - phpunit tests
+
+# Deployment (customize this as per your needs)
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying to production server..."
+    # Deploy script can be added here, e.g., using SSH to transfer files
+  only:
+    - master
