@@ -22,6 +22,17 @@ before_script:
   # Ensure a valid php.ini exists
   - cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
+  # Wait for MySQL to be ready (using sleep as a basic solution)
+  - until mysql -h mysql -u root -proot -e "SHOW DATABASES"; do echo "Waiting for MySQL..."; sleep 5; done
+
+  # Import the database schema (db/database.sql) into MySQL
+  - mysql -h mysql -u root -proot $MYSQL_DATABASE < db/database.sql
+
+  # Insert sample rows into the database
+  - mysql -h mysql -u root -proot $MYSQL_DATABASE -e "INSERT INTO users (username, email, password) VALUES ('user1', 'user1@example.com', 'password123');"
+  - mysql -h mysql -u root -proot $MYSQL_DATABASE -e "INSERT INTO users (username, email, password) VALUES ('user2', 'user2@example.com', 'password456');"
+  - mysql -h mysql -u root -proot $MYSQL_DATABASE -e "INSERT INTO users (username, email, password) VALUES ('user3', 'user3@example.com', 'password789');"
+
 stages:
   - install
   - test
@@ -40,6 +51,7 @@ run_tests:
   stage: test
   script:
     - echo "Running tests..."
+    # Example test to check if the users were inserted and can be fetched
     - php vendor/bin/phpunit --configuration phpunit.xml.dist
   only:
     - main
