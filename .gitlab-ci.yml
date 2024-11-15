@@ -4,6 +4,12 @@ stages:
   - build
 #  - deploy
 
+cache:
+  key: "${CI_COMMIT_REF_SLUG}"
+  paths:
+    - vendor/
+    - composer.lock
+
 install_dependencies:
   stage: install
   image: php:7.0-cli
@@ -11,7 +17,8 @@ install_dependencies:
     - apt-get update && apt-get install -y unzip git curl
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
-    - composer install
+    - composer install --ignore-platform-reqs
+    - php -v
   artifacts:
     paths:
       - vendor/
@@ -22,7 +29,8 @@ test:
   before_script:
     - apt-get update && apt-get install -y zip unzip
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    - composer install
+    - composer install --ignore-platform-reqs
+    - php -v
   script:
     - ./vendor/bin/phpunit --testdox
 
