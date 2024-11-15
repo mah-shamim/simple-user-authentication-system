@@ -1,0 +1,43 @@
+image: php:5.6
+
+stages:
+  - install
+  - test
+  - deploy
+
+variables:
+  DB_HOST: "localhost"
+  DB_NAME: "test_db"
+  DB_USER: "root"
+  DB_PASSWORD: "password"
+
+before_script:
+  - apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip
+  - docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+  - docker-php-ext-install gd
+  - curl -sS https://getcomposer.org/installer | php
+  - mv composer.phar /usr/local/bin/composer
+  - composer install
+
+# Install dependencies
+install_dependencies:
+  stage: install
+  script:
+    - echo "Installing dependencies using Composer"
+    - composer install --no-interaction
+
+# Run PHP tests (if any)
+run_tests:
+  stage: test
+  script:
+    - echo "Running PHP tests"
+    - vendor/bin/phpunit --configuration phpunit.xml
+
+# Deployment (example step, adjust as needed)
+#deploy_to_production:
+#  stage: deploy
+#  script:
+#    - echo "Deploying to production server"
+#    - scp -r * user@production_server:/path/to/deployment/folder/
+#  only:
+#    - master  # Deploy only from the master branch
