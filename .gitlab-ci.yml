@@ -21,6 +21,14 @@ before_script:
   - docker-php-ext-install pdo_mysql
   - php --version
 
+  # Ensure MySQL service is ready before proceeding
+  - |
+    echo "Waiting for MySQL to be ready..."
+    until mysql -h mysql -u root -proot -e "SHOW DATABASES"; do
+      echo "MySQL is not ready yet, waiting...";
+      sleep 5;
+    done
+
   # Ensure a valid php.ini exists
   - cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
