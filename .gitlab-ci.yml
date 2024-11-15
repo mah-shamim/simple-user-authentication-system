@@ -1,53 +1,41 @@
+image: php:latest
+
+services:
+  - mysql:latest
+
+variables:
+  MYSQL_DATABASE: user_auth
+  MYSQL_USER: root
+  MYSQL_PASSWORD: root
+  MYSQL_ROOT_PASSWORD: root
+
+cache:
+  paths:
+    - vendor/
+    - ~/.composer/cache
+
+before_script:
+  # Install required system dependencies
+  - apt-get update && apt-get install -y unzip git php-zip
+
+  # Ensure a valid php.ini exists
+  - cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+
 stages:
   - install
   - test
-  - build
-#  - deploy
-
-cache:
-  key: "${CI_COMMIT_REF_SLUG}"
-  paths:
-    - vendor/
-    - composer.lock
 
 install_dependencies:
   stage: install
-  image: php:7.0-cli
-  before_script:
-    - apt-get update && apt-get install -y unzip php-zip git curl
-    - cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
-    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
-    - composer install --prefer-dist --no-progress --ignore-platform-reqs
-    - php -v
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install --prefer-dist --no-progress --ignore-platform-reqs
   artifacts:
     paths:
       - vendor/
 
-test:
+run_tests:
   stage: test
-  image: php:7.0-cli
-  before_script:
-    - apt-get update && apt-get install -y unzip php-zip unzip
-    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    - cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
-    - composer install --prefer-dist --no-progress --ignore-platform-reqs
-    - php -v
   script:
-    - ./vendor/bin/phpunit --testdox
-
-build:
-  stage: build
-  image: php:7.0-cli
-  script:
-    - echo "Building project..."
-
-#deploy:
-#  stage: deploy
-#  image: alpine:latest
-#  only:
-#    - main
-#  before_script:
-#    - apk add --no-cache openssh
-#  script:
-#    - scp -r ./* user@your_server:/path/to/deployment/
+    - echo "Running tests..."
+    - php artisan test
