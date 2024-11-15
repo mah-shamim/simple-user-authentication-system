@@ -16,7 +16,6 @@ cache:
 
 before_script:
   # Install required system dependencies
-  - apt-get update && apt-get install -y unzip git php8.2-zip
   - apt-get update && apt-get install -y software-properties-common
   - add-apt-repository ppa:ondrej/php
   - apt-get update && apt-get install -y unzip git php8.2 php8.2-zip
