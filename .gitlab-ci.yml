@@ -3,31 +3,35 @@ stages:
   - test
   - deploy
 
-# Define PHP 5.6 environment
-image: php:5.6-cli
-
-# Install dependencies (Composer)
-install_dependencies:
+# Install dependencies
+install:
   stage: install
-  script:
-    - apt-get update -y && apt-get install -y git unzip libpng-dev libjpeg-dev libfreetype6-dev libxml2-dev
-    - docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
-    - docker-php-ext-install gd
+  image: php:5.6
+  before_script:
+    - apt-get update -y
+    - apt-get install -y git unzip
     - curl -sS https://getcomposer.org/installer | php
-    - mv composer.phar /usr/local/bin/composer
-    - composer install
+  script:
+    - php composer.phar install
 
-# Run tests (optional but highly recommended)
-run_tests:
+# Run tests (Example: PHPUnit)
+test:
   stage: test
+  image: php:5.6
+  before_script:
+    - apt-get update -y
+    - apt-get install -y git unzip
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install
   script:
-    - composer require --dev phpunit/phpunit ^4.8
-    - vendor/bin/phpunit --configuration phpunit.xml
+    - ./vendor/bin/phpunit --configuration phpunit.xml
 
-# Deploy stage (dummy example for production)
-deploy:
-  stage: deploy
-  script:
-    - echo "Deploying application to production..."
-  only:
-    - main  # Only deploy on the main branch
+# Deploy to server (Example: FTP)
+#deploy:
+#  stage: deploy
+#  script:
+#    - echo "Deploying the project"
+#    - apt-get install -y lftp
+#    - lftp -f deploy.lftp
+#  only:
+#    - main

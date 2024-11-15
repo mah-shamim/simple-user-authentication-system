@@ -1,0 +1,3 @@
+open -u username,password ftp://yourserver.com
+mirror -R /local/project/directory /remote/project/directory
+exit
