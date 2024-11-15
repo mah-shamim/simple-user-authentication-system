@@ -17,7 +17,7 @@ cache:
 
 before_script:
   # Install required system dependencies and PHP extensions
-  - apt-get update && apt-get install -y unzip git libpq-dev libonig-dev
+  - apt-get update && apt-get install -y unzip git libpq-dev libonig-dev default-mysql-client
   - docker-php-ext-install pdo_mysql
   - php --version
 
