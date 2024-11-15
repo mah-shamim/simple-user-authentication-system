@@ -5,7 +5,7 @@ services:
     alias: mysql
 
 variables:
-  MYSQL_HOST: mysql
+  MYSQL_HOST: 127.0.0.1
   MYSQL_DATABASE: user_auth
   MYSQL_USER: root
   MYSQL_PASSWORD: root
@@ -22,7 +22,7 @@ before_script:
   - php --version
   - |
     echo "Waiting for MySQL to be ready..."
-    until mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASSWORD -e "SELECT 1"; do
+    until 127.0.0.1 -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASSWORD -e "SELECT 1"; do
       echo "MySQL is not ready yet, waiting...";
       sleep 5;
     done
