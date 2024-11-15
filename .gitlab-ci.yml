@@ -1,7 +1,8 @@
 image: php:8.2-cli
 
 services:
-  - mysql:latest
+  - name: mysql:latest
+    alias: mysql
 
 variables:
   MYSQL_HOST: mysql
@@ -16,21 +17,15 @@ cache:
     - ~/.composer/cache
 
 before_script:
-  # Install required system dependencies and PHP extensions
-  - apt-get update && apt-get install -y unzip git libpq-dev libonig-dev default-mysql-client
+  - apt-get update && apt-get install -y unzip git default-mysql-client
   - docker-php-ext-install pdo_mysql
   - php --version
-
-  # Ensure MySQL service is ready before proceeding
   - |
     echo "Waiting for MySQL to be ready..."
-    until mysql -h mysql -u root -proot -e "SHOW DATABASES"; do
+    until mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASSWORD -e "SHOW DATABASES"; do
       echo "MySQL is not ready yet, waiting...";
       sleep 5;
     done
-
-  # Ensure a valid php.ini exists
-  - cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
 stages:
   - install
@@ -49,7 +44,6 @@ install_dependencies:
 run_tests:
   stage: test
   script:
-    - echo "Running tests..."
     - php vendor/bin/phpunit --configuration phpunit.xml.dist
   only:
     - main
