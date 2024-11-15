@@ -15,7 +15,7 @@ install_dependencies:
 
 test:
   stage: test
-  image: php:8.3.13
+  image: php:7.0
   before_script:
     - apt-get update && apt-get install -y zip unzip
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -25,7 +25,7 @@ test:
 
 build:
   stage: build
-  image: php:8.3.13
+  image: php:7.0
   script:
     - echo "Building project..."
 
