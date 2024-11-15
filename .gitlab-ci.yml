@@ -4,6 +4,7 @@ services:
   - mysql:latest
 
 variables:
+  MYSQL_HOST: mysql
   MYSQL_DATABASE: user_auth
   MYSQL_USER: root
   MYSQL_PASSWORD: root
