@@ -14,7 +14,7 @@ install_dependencies:
   stage: install
   image: php:7.0-cli
   before_script:
-    - apt-get update && apt-get install -y unzip git curl
+    - apt-get update && apt-get install -y zip unzip php-zip git curl
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
     - composer install --ignore-platform-reqs
@@ -27,7 +27,7 @@ test:
   stage: test
   image: php:7.0-cli
   before_script:
-    - apt-get update && apt-get install -y zip unzip
+    - apt-get update && apt-get install -y zip unzip php-zip unzip
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - composer install --ignore-platform-reqs
     - php -v
