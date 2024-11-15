@@ -16,7 +16,7 @@ cache:
 
 before_script:
   # Install required system dependencies
-  - apt-get update && apt-get install -y unzip git
+  - apt-get update && apt-get install -y unzip git mysql-client
   - php --version
 
   # Ensure a valid php.ini exists
