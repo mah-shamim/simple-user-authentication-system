@@ -1,3 +1,12 @@
-<php>
-    <ini name="error_reporting" value="E_ALL & ~E_DEPRECATED" />
-</php>
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php">
+    <testsuites>
+        <testsuite name="Application Test Suite">
+            <directory suffix="Test.php">./tests</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <ini name="error_reporting" value="E_ALL" />
+        <ini name="display_errors" value="stderr" />
+    </php>
+</phpunit>
