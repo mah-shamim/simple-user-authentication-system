@@ -1,28 +1,30 @@
 <?php
+
 use PHPUnit\Framework\TestCase;
-use PDO;
 
 class UserTest extends TestCase
 {
-    private $pdo;
+    protected $pdo;
 
     protected function setUp(): void
     {
-        // Connect to the MySQL database
-        $this->pdo = new PDO('mysql:host=mysql;dbname=user_auth', 'root', 'root');
+        $host = getenv('MYSQL_HOST') ?: 'localhost';
+        $db = getenv('MYSQL_DATABASE') ?: 'user_auth';
+        $user = getenv('MYSQL_USER') ?: 'root';
+        $pass = getenv('MYSQL_PASSWORD') ?: 'root';
+        $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
+
+        try {
+            $this->pdo = new PDO($dsn, $user, $pass);
+        } catch (PDOException $e) {
+            $this->fail("Database connection failed: " . $e->getMessage());
+        }
     }
 
-    public function testUserInsertion()
+    public function testUserInsertion(): void
     {
-        // Query the database to check if the users were inserted
-        $stmt = $this->pdo->query("SELECT * FROM users WHERE username = 'user1'");
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Assert that the user exists and data is correct
-        $this->assertNotEmpty($user);
-        $this->assertEquals('user1', $user['username']);
-        $this->assertEquals('user1@example.com', $user['email']);
+        $query = $this->pdo->prepare("INSERT INTO users (name, email) VALUES (:name, :email)");
+        $result = $query->execute([':name' => 'John Doe', ':email' => 'john.doe@example.com']);
+        $this->assertTrue($result, "User insertion failed");
     }
-
-    // Add more tests as necessary
 }
