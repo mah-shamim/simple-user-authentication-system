@@ -41,4 +41,4 @@ deploy:
     - echo "Deploying to production server..."
     # Deploy script can be added here, e.g., using SSH to transfer files
   only:
-    - master
+    - main
