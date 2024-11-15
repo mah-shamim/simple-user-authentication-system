@@ -1,7 +1,7 @@
 image: php:8.2-cli
 
 services:
-  - name: mysql:latest
+  - name: mysql:5.7
     alias: mysql
 
 variables:
@@ -22,7 +22,7 @@ before_script:
   - php --version
   - |
     echo "Waiting for MySQL to be ready..."
-    until mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASSWORD -e "SHOW DATABASES"; do
+    until mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASSWORD -e "SELECT 1"; do
       echo "MySQL is not ready yet, waiting...";
       sleep 5;
     done
