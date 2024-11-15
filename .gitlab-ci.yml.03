@@ -1,0 +1,37 @@
+stages:
+  - install
+  - test
+  - deploy
+
+# Install dependencies
+install:
+  stage: install
+  image: php:5.6
+  before_script:
+    - apt-get update -y
+    - apt-get install -y git unzip
+    - curl -sS https://getcomposer.org/installer | php
+  script:
+    - php composer.phar install
+
+# Run tests (Example: PHPUnit)
+test:
+  stage: test
+  image: php:5.6
+  before_script:
+    - apt-get update -y
+    - apt-get install -y git unzip
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install
+  script:
+    - ./vendor/bin/phpunit --configuration phpunit.xml
+
+# Deploy to server (Example: FTP)
+#deploy:
+#  stage: deploy
+#  script:
+#    - echo "Deploying the project"
+#    - apt-get install -y lftp
+#    - lftp -f deploy.lftp
+#  only:
+#    - main
