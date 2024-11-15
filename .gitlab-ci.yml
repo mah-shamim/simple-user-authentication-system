@@ -40,7 +40,7 @@ run_tests:
   stage: test
   script:
     - echo "Running tests..."
-    - php vendor/bin/phpunit --configuration phpunit.xml.dist
+    - php vendor/bin/phpunit --configuration phpunit.xml.dist --verbose
   only:
     - main
 
