@@ -16,8 +16,9 @@ cache:
     - ~/.composer/cache
 
 before_script:
-  # Install required system dependencies
-  - apt-get update && apt-get install -y unzip git
+  # Install required system dependencies and PHP extensions
+  - apt-get update && apt-get install -y unzip git libpq-dev libonig-dev
+  - docker-php-ext-install pdo_mysql
   - php --version
 
   # Ensure a valid php.ini exists
@@ -41,7 +42,6 @@ run_tests:
   stage: test
   script:
     - echo "Running tests..."
-    - docker logs $(docker ps -q --filter "name=mysql")
     - php vendor/bin/phpunit --configuration phpunit.xml.dist
   only:
     - main
