@@ -6,7 +6,10 @@ stages:
 
 install_dependencies:
   stage: install
-  image: composer:latest
+  image: php:7.0-cli
+  before_script:
+    - apt-get update && apt-get install -y unzip git curl
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
     - composer install
   artifacts:
@@ -15,7 +18,7 @@ install_dependencies:
 
 test:
   stage: test
-  image: php:7.0
+  image: php:7.0-cli
   before_script:
     - apt-get update && apt-get install -y zip unzip
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -25,7 +28,7 @@ test:
 
 build:
   stage: build
-  image: php:7.0
+  image: php:7.0-cli
   script:
     - echo "Building project..."
 
