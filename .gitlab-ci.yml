@@ -18,7 +18,7 @@ install_dependencies:
     - cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
-    - composer install-prefer-dist --no-progress --ignore-platform-reqs
+    - composer install --prefer-dist --no-progress --ignore-platform-reqs
     - php -v
   artifacts:
     paths:
