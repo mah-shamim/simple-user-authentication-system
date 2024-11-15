@@ -22,7 +22,7 @@ before_script:
   - cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
   # Wait for MySQL to be ready
-  - until mysql -h mysql -u root -proot -e "SHOW DATABASES"; do echo "Waiting for MySQL..."; sleep 5; done
+  - until docker exec mysql mysql -u root -proot -e "SHOW DATABASES"; do echo "Waiting for MySQL..."; sleep 5; done
 
   # Import the database schema (db/database.sql) into MySQL
   - docker exec -i mysql mysql -u root -proot $MYSQL_DATABASE < db/database.sql
