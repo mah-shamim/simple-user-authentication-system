@@ -25,6 +25,7 @@ before_script:
 stages:
   - install
   - test
+  - build
 
 install_dependencies:
   stage: install
@@ -39,4 +40,11 @@ run_tests:
   stage: test
   script:
     - echo "Running tests..."
-    - php artisan test
+    - php vendor/bin/phpunit --configuration phpunit.xml.dist
+  only:
+    - main
+
+build:
+  stage: build
+  script:
+    - echo "Building project..."
