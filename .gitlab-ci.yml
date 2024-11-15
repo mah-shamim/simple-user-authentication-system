@@ -3,42 +3,31 @@ stages:
   - test
   - deploy
 
-variables:
-  PHP_VERSION: "5.6"
+# Define PHP 5.6 environment
+image: php:5.6-cli
 
-# Install PHP dependencies using composer
+# Install dependencies (Composer)
 install_dependencies:
-  image: php:5.6
   stage: install
-  before_script:
-    - apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git
-    - docker-php-ext-configure gd --with-freetype-dir=/usr/include --with-jpeg-dir=/usr/include
+  script:
+    - apt-get update -y && apt-get install -y git unzip libpng-dev libjpeg-dev libfreetype6-dev libxml2-dev
+    - docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
     - docker-php-ext-install gd
     - curl -sS https://getcomposer.org/installer | php
     - mv composer.phar /usr/local/bin/composer
-  script:
     - composer install
-  cache:
-    paths:
-      - vendor/
 
-# Run tests
+# Run tests (optional but highly recommended)
 run_tests:
-  image: php:5.6
   stage: test
-  before_script:
-    - apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git
-    - curl -sS https://getcomposer.org/installer | php
-    - mv composer.phar /usr/local/bin/composer
-    - composer install
   script:
-    - phpunit tests
+    - composer require --dev phpunit/phpunit ^4.8
+    - vendor/bin/phpunit --configuration phpunit.xml
 
-# Deployment (customize this as per your needs)
+# Deploy stage (dummy example for production)
 deploy:
   stage: deploy
   script:
-    - echo "Deploying to production server..."
-    # Deploy script can be added here, e.g., using SSH to transfer files
+    - echo "Deploying application to production..."
   only:
-    - main
+    - main  # Only deploy on the main branch
