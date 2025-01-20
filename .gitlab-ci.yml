@@ -1,4 +1,4 @@
-image: php:8.2-cli
+image: ubuntu-latest
 
 services:
   - name: mysql:5.7
